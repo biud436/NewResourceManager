@@ -44,15 +44,21 @@ namespace NewResourceManager
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         public Form1(string[] args)
         {
             commandLines_ = args;
             InitializeComponent();
         }
 
-        /**
-         * 폴더 리스트를 반환합니다 (재귀적)
-         */
+        /// <summary>
+        /// 폴더 리스트를 반환합니다 (재귀적)
+        /// </summary>
+        /// <param name="concatDirs"></param>
+        /// <param name="dirs"></param>
         public void GetDirs(List<string> concatDirs, string dirs)
         {
             try
@@ -72,6 +78,9 @@ namespace NewResourceManager
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void OpenMvGameFolder()
         {
             openFileDialog2.InitialDirectory = GetMvGameFolder();
@@ -97,6 +106,9 @@ namespace NewResourceManager
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void RefreshImgFolderList()
         {
             // 프로젝트 폴더에서 img 폴더를 읽습니다.
@@ -121,6 +133,11 @@ namespace NewResourceManager
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_Shown(object sender, EventArgs e)
         {
             // 프로젝트 경로를 찾습니다.
@@ -153,11 +170,13 @@ namespace NewResourceManager
 
             folderList.SelectedIndex = currentFolderIndex;
             
-
             RefreshXmlListBox();
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void RefreshXmlListBox()
         {
             int preCount = xml_listBox.Items.Count;
@@ -222,6 +241,9 @@ namespace NewResourceManager
             
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void RefreshFileList()
         {
             // 이전에 저장된 리스트를 삭제합니다.
@@ -261,21 +283,41 @@ namespace NewResourceManager
 
         }
 
+        /// <summary>
+        /// 현재 선택된 파일이 png 파일인지 확인합니다.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private bool IsPNG(int index)
         {
             return Path.GetExtension(fileList_[index]).ToLower() == ".png";
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         private bool Exists(int index)
         {
             return File.Exists(fileList_[index]);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void folderList_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshFileList();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void fileList_SelectedIndexChanged(object sender, EventArgs e)
         {
             int index = fileList.SelectedIndex;
@@ -298,6 +340,9 @@ namespace NewResourceManager
 
         }
 
+        /// <summary>
+        /// 이미지 미리보기 창을 띄웁니다.
+        /// </summary>
         public void StartPreviewWindow()
         {
             if (fileList.Enabled && !String.IsNullOrEmpty(selectedFile))
@@ -316,16 +361,31 @@ namespace NewResourceManager
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NewForm_Disposed(object sender, EventArgs e)
         {
             
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void preview_btn_Click(object sender, EventArgs e)
         {
             StartPreviewWindow();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void import_btn_Click(object sender, EventArgs e)
         {
             openFileDialog1.InitialDirectory = resources_[folderList.SelectedIndex];
@@ -351,15 +411,20 @@ namespace NewResourceManager
             }
         }
 
-        /**
-         * 투명색 설정 후 data/config.xml로 내보내기
-         */
+        /// <summary>
+        /// 투명색 설정 후 data/config.xml로 내보내기
+        /// </summary>
+        /// <param name="transparentKey"></param>
         public void AddTransparentKey(string transparentKey)
         {
             string path = Path.Combine(projectPath_, "data", "transparentKey.txt");
             File.AppendAllText(path, transparentKey + Environment.NewLine);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="args"></param>
         public void AddTransparentKey(string[] args)
         {
             string path = Path.Combine(projectPath_, "data", "transparentKey.xml");
@@ -393,6 +458,9 @@ namespace NewResourceManager
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private void RemoveNode()
         {
             string path = Path.Combine(projectPath_, "data", "transparentKey.xml");
@@ -432,6 +500,12 @@ namespace NewResourceManager
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="xmlDoc"></param>
+        /// <param name="_object"></param>
+        /// <param name="args"></param>
         private void AddNode(XmlDocument xmlDoc, XmlNode _object, string[] args)
         {
             XmlAttribute attr_name = xmlDoc.CreateAttribute("name");
@@ -459,6 +533,11 @@ namespace NewResourceManager
             _object.Attributes.Append(attr_color);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void delete_btn_Click(object sender, EventArgs e)
         {
             try
@@ -488,6 +567,11 @@ namespace NewResourceManager
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void fileList_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             if(preview_btn.Enabled)
@@ -497,6 +581,11 @@ namespace NewResourceManager
             
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void export_btn_Click(object sender, EventArgs e)
         {
             int index = fileList.SelectedIndex;
@@ -540,12 +629,16 @@ namespace NewResourceManager
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form1_Load(object sender, EventArgs e)
         {
 #if DEBUG
             AllocConsole();
 #endif
-
             this.CenterToScreen();
             this.Text = Localization.Form1Title;
             preview_btn.Text = Localization.PreviewButton;
@@ -559,6 +652,10 @@ namespace NewResourceManager
 
         }
 
+        /// <summary>
+        /// 확장 도구가 등록되어있는 지 여부를 확인합니다.
+        /// </summary>
+        /// <returns></returns>
         public bool IsAddedExtension()
         {
             string subkey = @"Software\KADOKAWA\RPGMV";
@@ -594,6 +691,10 @@ namespace NewResourceManager
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public string GetMvGameFolder()
         {
             string subkey = @"Software\KADOKAWA\RPGMV";
@@ -611,6 +712,10 @@ namespace NewResourceManager
 
         }
 
+        /// <summary>
+        /// 레지스트리에 확장 도구를 등록하거나 해제합니다.
+        /// </summary>
+        /// <param name="isShowMessage"></param>
         public void UpdateRegistry(bool isShowMessage = true)
         {
             string subkey = @"Software\KADOKAWA\RPGMV";
@@ -747,6 +852,9 @@ namespace NewResourceManager
             }
         }
 
+        /// <summary>
+        /// 프로그램에 내장된 Identification.zip 파일의 압축을 해제합니다.
+        /// </summary>
         private void ExtractZip()
         {
             
@@ -784,11 +892,21 @@ namespace NewResourceManager
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void add_extension_btn_Click(object sender, EventArgs e)
         {
             UpdateRegistry();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void xml_listBox_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.KeyCode == Keys.Delete)
@@ -810,6 +928,11 @@ namespace NewResourceManager
             
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void xml_delete_btn_Click(object sender, EventArgs e)
         {
             if (xml_listBox.Items.Count > 0)

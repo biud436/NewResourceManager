@@ -22,6 +22,11 @@ namespace NewResourceManager
         public bool isOk;
         public string transparentKey;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="targetPath"></param>
         public ImportEditor(string filePath, string targetPath)
         {
             InitializeComponent();
@@ -38,6 +43,11 @@ namespace NewResourceManager
             transparentKey = "";
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pictureBox1_MouseClick(object sender, MouseEventArgs e)
         {
             if(e.Button != MouseButtons.Left)
@@ -74,11 +84,22 @@ namespace NewResourceManager
             //panel1.Invalidate();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void pictureBox1_Click(object sender, EventArgs e)
         {
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sourcePath"></param>
+        /// <param name="destinationPath"></param>
+        /// <returns></returns>
         public async Task CopyFileAsync(string sourcePath, string destinationPath)
         {
             using (Stream source = File.Open(sourcePath, FileMode.Open))
@@ -90,6 +111,11 @@ namespace NewResourceManager
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ok_btn_Click(object sender, EventArgs e)
         {
             string[] splitStrings = imagePath_.Split(Path.DirectorySeparatorChar);
@@ -140,6 +166,11 @@ namespace NewResourceManager
 
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cancel_btn_Click(object sender, EventArgs e)
         {
             // 비트맵 메모리를 해제합니다.
@@ -151,6 +182,11 @@ namespace NewResourceManager
             Close();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ImportEditor_Load(object sender, EventArgs e)
         {
             ok_btn.Text = Localization.ImportEditorOkButton;

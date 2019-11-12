@@ -15,6 +15,10 @@ namespace NewResourceManager
 
         public string imgPath_;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="imgPath"></param>
         public Form2(string imgPath)
         {
             InitializeComponent();
@@ -24,6 +28,11 @@ namespace NewResourceManager
             this.KeyPreview = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void close_btn_Click(object sender, EventArgs e)
         {
             if(pictureBox1.Image != null)
@@ -34,6 +43,11 @@ namespace NewResourceManager
             Close();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form2_Load(object sender, EventArgs e)
         {
 
@@ -43,11 +57,17 @@ namespace NewResourceManager
             using (var bmp = new Bitmap(imgPath_))
             {
                 pictureBox1.Image = new Bitmap(bmp);
+                SetClientSizeCore(bmp.Width, bmp.Height);
             }
 
             this.CenterToScreen();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Form2_KeyDown(object sender, KeyEventArgs e)
         {
             if(e.KeyCode == Keys.Escape)

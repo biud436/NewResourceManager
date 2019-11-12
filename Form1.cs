@@ -24,6 +24,11 @@ namespace NewResourceManager
     public partial class Form1 : System.Windows.Forms.Form
     {
 
+        /// <summary>
+        /// 멤버 변수는 크로미움의 변수 이름 명명 스타일과 비슷하게 끝에 _가 붙습니다.
+        /// 아무것도 붙이지 않는 것이 정석이지만 이제와서 바꿀 수는 없으므로 그대로 둡니다.
+        /// </summary>
+        /// 
         public string[] commandLines_;
         public string projectPath_ = @"E:\Games\161beta\Game.rpgproject";
         public List<string> fileList_ = new List<string>();
@@ -32,6 +37,7 @@ namespace NewResourceManager
         {
             {"", new List<string> { "" } }
         };
+
         public string selectedFile = @"";
 
         public int lastFileIndex_ = 0;
@@ -40,6 +46,11 @@ namespace NewResourceManager
 
         public bool isActivatedExtensionProgram = false;
 
+        /// <summary>
+        /// 디버그 모드에서 콘솔 창을 띄우기 위한 API를 kernel32.dll로부터 바인딩 합니다.
+        /// 굳이 사용할 필요는 없으므로, 추후 System.Diagnostics.Debug.WriteLine으로 대체될 수 있습니다.
+        /// </summary>
+        /// <returns></returns>
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
@@ -55,7 +66,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 폴더 리스트를 반환합니다 (재귀적)
+        /// img 폴더 내의 모든 폴더를 재귀적으로 찾아 리스트화 합니다.
         /// </summary>
         /// <param name="concatDirs"></param>
         /// <param name="dirs"></param>
@@ -79,7 +90,9 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 프로젝트 파일을 선택하는 파일 선택 창을 띄웁니다.
+        /// 프로그램이 MV 툴바에서 실행되지 않고, 독립적으로 실행되었을 때 실행됩니다.
+        /// 프로젝트 파일은 프로젝트 경로를 취득하기 위해 사용됩니다.
         /// </summary>
         public void OpenMvGameFolder()
         {
@@ -107,7 +120,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 이미지 폴더 목록을 새로 고침합니다.
         /// </summary>
         private void RefreshImgFolderList()
         {
@@ -116,6 +129,7 @@ namespace NewResourceManager
 
             string rpgprojectPath = Path.Combine(projectPath_, "Game.rpgproject");
 
+            // img 폴더의 모든 폴더를 재귀적으로 나열합니다.
             GetDirs(concatDirs, Path.Combine(projectPath_, "img"));
 
             string[] dirs = concatDirs.ToArray();
@@ -134,7 +148,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 폼이 생성된 이후, 명령줄 인수 값을 취득하여 프로젝트 경로를 목적에 맞게 파싱합니다.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -175,7 +189,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 투명색 목록을 새로 고침합니다.
         /// </summary>
         private void RefreshXmlListBox()
         {
@@ -242,7 +256,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 이미지 목록을 새로 고침합니다.
         /// </summary>
         public void RefreshFileList()
         {
@@ -294,7 +308,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 이미지가 대상 경로에 실제로 존재하는 지 확인합니다.
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
@@ -314,7 +328,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 이미지 목록의 인덱스 값이 변경되었을 때의 동작입니다.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -372,7 +386,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 미리 보기 버튼을 눌렀을 때의 동작입니다.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -382,7 +396,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 가져오기 버튼을 눌렀을 때의 동작입니다.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -422,7 +436,9 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 프로젝트 폴더의 data 폴더에서 transparentKey.xml 파일을 로드합니다.
+        /// 파일이 이미 존재하면 기존 데이터에 추가 기입합니다.
+        /// 파일이 존재하지 않는 경우, 처음부터 새로 만듭니다.
         /// </summary>
         /// <param name="args"></param>
         public void AddTransparentKey(string[] args)
@@ -453,13 +469,15 @@ namespace NewResourceManager
             xmlDoc.Save(path);
             RefreshXmlListBox();
 
+            // XML에서 JSON 데이터로 변환합니다.
             string json = JsonConvert.SerializeXmlNode(xmlDoc, Newtonsoft.Json.Formatting.Indented);
             File.WriteAllText(path.Replace(".xml", ".json"), json, Encoding.UTF8);
 
         }
 
         /// <summary>
-        /// 
+        /// 특정 투명색을 삭제합니다.
+        /// 이 함수가 호출되면 투명색 목록이 기록된 파일인 transparentKey.xml 파일이 업데이트 됩니다.
         /// </summary>
         private void RemoveNode()
         {
@@ -534,7 +552,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 이미지 목록에서 특정 이미지를 삭제합니다.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -568,7 +586,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 이미지 목록에서 더블 클릭을 눌렀을 때 미리 보기 창을 띄웁니다.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -582,7 +600,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 내보내기 버튼을 눌렀을 때 해당 이미지 파일을 대상 폴더로 복사합니다.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -630,7 +648,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 컴포넌트 초기화가 완료되면 호출되는 폼 로드 이벤트입니다.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -648,6 +666,8 @@ namespace NewResourceManager
             groupBox1.Text = Localization.TransperantPanel;
             toolTip1.SetToolTip(groupBox1, Localization.TransperantPanelTooltip);
             add_extension_btn.Text = IsAddedExtension() ? Localization.RemoveExtensionButton : Localization.AddExtensionButton;
+
+            // Identification.zip 압축 파일의 압축을 해제합니다.
             ExtractZip();
 
         }
@@ -692,7 +712,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 레지스트리에서 현재 프로젝트의 게임 폴더 경로를 가져옵니다.
         /// </summary>
         /// <returns></returns>
         public string GetMvGameFolder()
@@ -893,7 +913,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 확장 도구를 추가하거나 해제합니다.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -903,7 +923,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 이미지가 선택된 상태에서 Delete 키를 눌렀을 때
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -929,7 +949,7 @@ namespace NewResourceManager
         }
 
         /// <summary>
-        /// 
+        /// 투명색 목록에서 삭제 버튼을 눌렀을 때 동작합니다.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -959,6 +979,9 @@ namespace NewResourceManager
 
 namespace RMMV
 {
+    /// <summary>
+    /// 레지스트리 mvTools 키에 JSON을 작성하기 위한 JSON 스키마입니다.
+    /// </summary>
     class ExtensionSchema
     {
         public string appName { get; set; }

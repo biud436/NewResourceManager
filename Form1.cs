@@ -115,7 +115,11 @@ namespace NewResourceManager
             }
             else
             {
-                OpenMvGameFolder();
+                MessageBox.Show(
+                    $"you must select the game folder. try to restart {Application.ProductName}",
+                    Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+                return;
             }
         }
 
@@ -686,7 +690,14 @@ namespace NewResourceManager
                 return false;
             }
 
-            JArray jsonArray = JArray.Parse(Convert.ToString(rk.GetValue("mvTools")));
+            object regKey = rk.GetValue("mvTools");
+            if(regKey is null)
+            {
+                MessageBox.Show("Cannot find a value named 'mvTools' in the windows registry", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            JArray jsonArray = JArray.Parse(Convert.ToString(regKey));
 
             // 배열이 없으면
             if (jsonArray.Count == 0)
@@ -892,6 +903,13 @@ namespace NewResourceManager
                 }
 
                 string _zipPathMain = Path.Combine(root, "Identification.zip");
+
+                if( !File.Exists(_zipPathMain) )
+                {
+                    MessageBox.Show("Cannot find the file named 'Identification.zip'", Application.ProductName, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                    return;
+                }
 
                 File.WriteAllBytes(_zipPathMain, Properties.Resources.Identification);
 
